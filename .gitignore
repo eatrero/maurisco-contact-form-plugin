@@ -3,3 +3,4 @@ node_modules/
 *.codekit
 *.sublime-workspace
 .idea/*
+npm-debug.log
