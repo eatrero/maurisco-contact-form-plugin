@@ -327,6 +327,7 @@ class Maurisco_Contact_Form_Plugin {
 			'category' => ''
 		), $atts );
 		$maurisco_api_id = get_option( 'maurisco_api_id');
+		$type_arr = maurisco_cf_get_leadtypes();
 
 		$output  = "<div><form id='maurisco_cf' name='maurisco_cf'>";
 		$output .= wp_nonce_field( 'maurisco_cf', 'maurisco_cf_nonce');
@@ -336,8 +337,11 @@ class Maurisco_Contact_Form_Plugin {
 		$output .= "<div><input id='maurisco_cf_email' type='email' required placeholder='email'/></div>";
 		$output .= "<div><input id='maurisco_cf_date' type='text' required placeholder='date' size='20'/></div>";
 		$output .= "<div><select id='maurisco_cf_event_type' name='event_type'>";
-		$output .= "  <option value='wedding'>Wedding</option>";
-		$output .= "  <option value='engagement'>Engagement</option>";
+
+		foreach ($type_arr as $type){
+			$output .= "  <option value='" . $type->{'name'} . "'>" . ($type->{'name'}) ."</option>";
+		}
+
 		$output .= "</select></div>";
 		$output .= "<div><input id='maurisco_cf_location' type='text' required placeholder='event location'/></div>";
 		$output .= "<div><textarea id='maurisco_cf_comments1' required placeholder='Comments or questions?' rows='10' cols='50'></textarea></div>";
