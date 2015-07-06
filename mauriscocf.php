@@ -96,9 +96,7 @@ function maurisco_cf_plugin_callback() {
 */
 
 
-//    error_log(serialize($_POST));
-
-//	$url = 'https://127.0.0.1:8000/api/v1/lead';
+//	$url = 'https://mauris.co/api/v1/lead';
 	$url = 'https://192.168.1.157:8000/api/v1/lead';
 
 	$data = array(

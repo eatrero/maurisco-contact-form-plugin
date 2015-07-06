@@ -78,6 +78,7 @@ class Maurisco_Contact_Form_Plugin {
 		 */
 //		add_action( 'TODO', array( $this, 'action_method_name' ) );
 //		add_filter( 'TODO', array( $this, 'filter_method_name' ) );
+		add_action('wp_head', array( $this, 'hook_css' ) );
 
 		add_shortcode( 'maurisco_cf', array( $this, 'maurisco_cf_sc') );
 
@@ -329,28 +330,67 @@ class Maurisco_Contact_Form_Plugin {
 		$maurisco_api_id = get_option( 'maurisco_api_id');
 		$type_arr = maurisco_cf_get_leadtypes();
 
-		$output  = "<div><form id='maurisco_cf' name='maurisco_cf'>";
+		$output  = "<div><form id='maurisco_cf' class='maurisco_cf_form' name='maurisco_cf'>";
 		$output .= wp_nonce_field( 'maurisco_cf', 'maurisco_cf_nonce');
 		$output .= "<div><input id='maurisco_id' type='hidden' value='" . md5($maurisco_api_id) . "' /></div>";
-		$output .= "<div><input id='maurisco_cf_first_name' type='text' required autofocus placeholder='First Name'/></div>";
-		$output .= "<div><input id='maurisco_cf_last_name' type='text' required autofocus placeholder='Last Name'/></div>";
-		$output .= "<div><input id='maurisco_cf_email' type='email' required placeholder='email'/></div>";
-		$output .= "<div><input id='maurisco_cf_date' type='text' required placeholder='date' size='20'/></div>";
-		$output .= "<div><select id='maurisco_cf_event_type' name='event_type'>";
+		$output .= "<div><input id='maurisco_cf_first_name' class='maurisco_cf_input maurisco_cf_text' type='text' required autofocus placeholder='First Name'/></div>";
+		$output .= "<div><input id='maurisco_cf_last_name' class='maurisco_cf_input maurisco_cf_text' type='text' required autofocus placeholder='Last Name'/></div>";
+		$output .= "<div><input id='maurisco_cf_email' class='maurisco_cf_input maurisco_cf_email' type='email' required placeholder='Email'/></div>";
+		$output .= "<div><input id='maurisco_cf_date' class='maurisco_cf_input maurisco_cf_date' type='text' required placeholder='Date' size='20'/></div>";
 
-		foreach ($type_arr as $type){
-			$output .= "  <option value='" . $type->{'name'} . "'>" . ($type->{'name'}) ."</option>";
+		if(is_array($type_arr)){
+			$output .= "<div><select id='maurisco_cf_event_type' class='maurisco_cf_select' name='event_type'>";
+			foreach ($type_arr as $type){
+				$output .= "  <option value='" . $type->{'name'} . "'>" . ($type->{'name'}) ."</option>";
+			}
+			$output .= "</select></div>";
 		}
 
-		$output .= "</select></div>";
-		$output .= "<div><input id='maurisco_cf_location' type='text' required placeholder='event location'/></div>";
-		$output .= "<div><textarea id='maurisco_cf_comments1' required placeholder='Comments or questions?' rows='10' cols='50'></textarea></div>";
-		$output .= "<div><button id='maurisco_cf_submit' type='submit'>Submit</button></div>";
+		$output .= "<div><input id='maurisco_cf_location' class='maurisco_cf_input maurisco_cf_text' type='text' required placeholder='Event Location'/></div>";
+		$output .= "<div><textarea id='maurisco_cf_comments1' class='maurisco_cf_input maurisco_cf_text_area' required placeholder='Comments or questions?' rows='10' cols='50'></textarea></div>";
+		$output .= "<div><button id='maurisco_cf_submit' class='maurisco_cf_button' type='submit'>Submit</button></div>";
 		$output .= "</form></div>";
 		$output .= "<div id='maurisco_cf_message' class='maurisco-cf-message'></div>";
 
 	  return $output;
 
+	}
+
+	/**
+	 * maurisco_cf_sc add styling hook
+	 *
+	 * @since    1.0.0
+	 */
+	public function hook_css()
+	{
+		$output = "<style>
+		.maurisco_cf_input {
+			display: block;
+			padding: 6px 12px;
+			font-size: 14px;
+			line-height: 1.42857143;
+			color: #555555;
+			background-color: #f6f6f6;
+			background-image: none;
+			border: 0px solid #676767;
+			border-radius: 0px;
+			margin-top: 10px;
+			margin-bottom:10px;
+		}
+
+		.maurisco_cf_textarea {
+			height: 30px;
+		}
+
+		.maurisco_cf_textarea {
+			height: 100px;
+		}
+		.maurisco_cf_button {
+			background-color: rgb(192,192,192);
+		}
+		</style>";
+
+		echo $output;
 	}
 
 }
