@@ -12,7 +12,8 @@ function maurisco_cf_get_leadtypes() {
             'apiId' => $maurisco_api_id,
             'apiKey' => $maurisco_api_key
             );
-        $url = 'https://192.168.1.157:8000/api/v1/lead_types';
+//        $url = 'https://192.168.1.157:8000/api/v1/lead_types';
+        $url = 'https://mauris.co/api/v1/lead_types';
         $response = wp_remote_get( $url, array( 'sslverify' => false, 'body' => $data ) );
         error_log(serialize($response));
 

@@ -32,10 +32,6 @@ function maurisco_cf_validate(){
 				$('#maurisco_cf').hide();
 				$('#maurisco_cf_message').html('<div>thank you for your submission</div>');
 
-				// post to
-//				var apiUrl = 'https://mauris.co/api/v1/lead';
-				var apiUrl = 'https://localhost:8000/api/v1/lead';
-
 				var apiId = $('#maurisco_id').val();
 				if(!apiId) {
 					$('#maurisco_cf').hide();
@@ -49,6 +45,8 @@ function maurisco_cf_validate(){
 				var location =  $('#maurisco_cf_location').val();
 				var type =  $('#maurisco_cf_event_type').val();
 				var maurisco_cf_comments1 = $('textarea#maurisco_cf_comments1').val();
+				var maurisco_cf_form_ajax_url = $('#maurisco_cf_url').val();
+				var maurisco_cf_nonce = $('#maurisco_cf_nonce').val();
 
 				console.log(datePicked);
 				console.log(type);
@@ -56,7 +54,7 @@ function maurisco_cf_validate(){
 
 				var data = {
 					action:  'maurisco_cf_plugin',
-					nonce: maurisco_cf_form.nonce,
+					nonce: maurisco_cf_nonce,
 					client : [{ "first_name" : first_name,
 						 	    "last_name" : last_name}],
 					  "email" : email,
@@ -68,11 +66,10 @@ function maurisco_cf_validate(){
 				   };
 
 				console.log( data );
-				console.log( maurisco_cf_form );
 
 				$.ajax({
 					type: "POST",
-					url: maurisco_cf_form.ajax_url,
+					url: maurisco_cf_form_ajax_url,
 					data: data,
 					dataType : 'json',
 					error : function(data, status) {

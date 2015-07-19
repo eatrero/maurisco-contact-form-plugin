@@ -81,6 +81,7 @@ class Maurisco_Contact_Form_Plugin {
 		add_action('wp_head', array( $this, 'hook_css' ) );
 
 		add_shortcode( 'maurisco_cf', array( $this, 'maurisco_cf_sc') );
+		add_action('wp_print_footer_scripts', array( $this, 'hook_localize_scripts' ) );
 
 	}
 
@@ -278,17 +279,25 @@ class Maurisco_Contact_Form_Plugin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_slug . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION, true );
+		error_log('enqueue_scripts');
+		wp_enqueue_script( 'maurisco-cf-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION, true );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
+	}
+
+	function hook_localize_scripts() {
+		error_log('hook_localize_scripts');
+		error_log(admin_url('admin-ajax.php'));
+/*
 		wp_localize_script(
-			$this->plugin_slug . '-plugin-script',
+			'maursico-cf-plugin-script',
 			'maurisco_cf_form',
 			array(
 				'ajax_url' =>  admin_url( 'admin-ajax.php' ),
 				'nonce'    =>  wp_create_nonce( 'return_posts' )
 			)
 		);
+*/
 	}
 
 	/**
@@ -331,12 +340,13 @@ class Maurisco_Contact_Form_Plugin {
 		$type_arr = maurisco_cf_get_leadtypes();
 
 		$output  = "<div><form id='maurisco_cf' class='maurisco_cf_form' name='maurisco_cf'>";
-		$output .= wp_nonce_field( 'maurisco_cf', 'maurisco_cf_nonce');
+		$output .= "<div><input id='maurisco_cf_nonce' type='hidden' value='" . wp_create_nonce( 'return_posts' ) . "' /></div>";
 		$output .= "<div><input id='maurisco_id' type='hidden' value='" . md5($maurisco_api_id) . "' /></div>";
 		$output .= "<div><input id='maurisco_cf_first_name' class='maurisco_cf_input maurisco_cf_text' type='text' required autofocus placeholder='First Name'/></div>";
 		$output .= "<div><input id='maurisco_cf_last_name' class='maurisco_cf_input maurisco_cf_text' type='text' required autofocus placeholder='Last Name'/></div>";
 		$output .= "<div><input id='maurisco_cf_email' class='maurisco_cf_input maurisco_cf_email' type='email' required placeholder='Email'/></div>";
 		$output .= "<div><input id='maurisco_cf_date' class='maurisco_cf_input maurisco_cf_date' type='text' required placeholder='Date' size='20'/></div>";
+		$output .= "<div><input id='maurisco_cf_url' type='hidden' value='" . admin_url( 'admin-ajax.php' ) . "' /></div>";
 
 		if(is_array($type_arr)){
 			$output .= "<div><select id='maurisco_cf_event_type' class='maurisco_cf_select' name='event_type'>";

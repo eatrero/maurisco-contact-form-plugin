@@ -53,9 +53,9 @@ function maurisco_cf_plugin_callback() {
 
     $nonce = $_POST['nonce'];
     // The first thing we do is check the nonce and kill the script if wrong
-    if ( ! wp_verify_nonce( $nonce, 'return_posts' ) ){
-        die ( 'Wrong nonce!');
-    }
+//    if ( ! wp_verify_nonce( $nonce, 'return_posts' ) ){
+//        die ( 'Wrong nonce!');
+//    }
 
 //    error_log($nonce);
 //    error_log(serialize($_POST));
@@ -81,8 +81,8 @@ function maurisco_cf_plugin_callback() {
 
 
 	$event_type_id = maurisco_filter_lead_type($type_arr, $event_type);
-	error_log($event_type_id);
 /*
+	error_log($event_type_id);
     error_log($client_0_first_name);
     error_log($client_0_last_name);
     error_log($email);
@@ -96,8 +96,8 @@ function maurisco_cf_plugin_callback() {
 */
 
 
-//	$url = 'https://mauris.co/api/v1/lead';
-	$url = 'https://192.168.1.157:8000/api/v1/lead';
+	$url = 'https://mauris.co/api/v1/lead';
+//	$url = 'https://192.168.1.157:8000/api/v1/lead';
 
 	$data = array(
 		'apiId' => $maurisco_api_id,
