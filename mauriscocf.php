@@ -51,28 +51,35 @@ add_action('wp_ajax_nopriv_maurisco_cf_plugin', 'maurisco_cf_plugin_callback' );
 function maurisco_cf_plugin_callback() {
 //	error_log('maurisco_cf_plugin_callback 1');
 
-    $nonce = $_POST['nonce'];
+//    $nonce = $_POST['maurisco_cf_nonce'];
     // The first thing we do is check the nonce and kill the script if wrong
 //    if ( ! wp_verify_nonce( $nonce, 'return_posts' ) ){
 //        die ( 'Wrong nonce!');
 //    }
 
 //    error_log($nonce);
-//    error_log(serialize($_POST));
+    error_log(serialize($_POST));
 
-	$client = $_POST['client'];
-    $client_0 = $client[0];
-    $client_0_first_name = $client_0['first_name'];
-    $client_0_last_name = $client_0['last_name'];
+	$name_0 = $_POST['name_0'] ? $_POST['name_0'] : null;
+	$email_0 = $_POST['email_0'] ? $_POST['email_0'] : null;
+	$name_1 = $_POST['name_1'] ? $_POST['name_1'] : null;
+	$email_1 = $_POST['email_1'] ? $_POST['email_1'] : null;
+	$name_2 = $_POST['name_2'] ? $_POST['name_2'] : null;
+	$email_2 = $_POST['email_2'] ? $_POST['email_2'] : null;
 
-    $email = $_POST['email'];
-    $event_date = $_POST['event_date'];
-    $location1 = $_POST['location1'];
-    $event_date = $_POST['event_date'];
-    $location1 = $_POST['location1'];
-    $event_type = $_POST['type'];
-    $comment1 = $_POST['comment1'];
+	$phone = $_POST['phone'] ? $_POST['phone'] : null;
+
+	$event_date = $_POST['event_date'] ? $_POST['event_date'] : null;
+
+	$event_location_1 = $_POST['event_location_1'] ? $_POST['event_location_1'] : null;
+	$event_type = $_POST['event_type'] ? $_POST['event_type'] : null;
+
+	$question_1 = $_POST['question_1'] ? $_POST['question_1'] : null;
+	$question_2 = $_POST['question_2'] ? $_POST['question_2'] : null;
+	$comment_1 = $_POST['comment_1'] ? $_POST['comment_1'] : null;
+
 	$userIp = $_POST['userIp'];
+
 	$maurisco_api_id = get_option( 'maurisco_api_id');
 	$maurisco_api_key = get_option( 'maurisco_api_key');
 
@@ -81,40 +88,39 @@ function maurisco_cf_plugin_callback() {
 
 
 	$event_type_id = maurisco_filter_lead_type($type_arr, $event_type);
-/*
-	error_log($event_type_id);
-    error_log($client_0_first_name);
-    error_log($client_0_last_name);
-    error_log($email);
-    error_log($event_date);
-    error_log($location1);
-    error_log($event_type);
-    error_log($comment1);
-    error_log($userIp);
-    error_log( $maurisco_api_id );
-    error_log( $maurisco_api_key );
-*/
 
-
-	$url = 'https://mauris.co/api/v1/lead';
-//	$url = 'https://192.168.1.157:8000/api/v1/lead';
+	if( defined(MARUISCO_CF_DEBUG) ){
+		$url = 'https://192.168.1.157:8000/api/v1/lead_types';
+	} else {
+		$url = 'https://mauris.co/api/v1/lead_types';
+	}
 
 	$data = array(
 		'apiId' => $maurisco_api_id,
 		'apiKey' => $maurisco_api_key,
 		'event_date' => $event_date,
-		'email' => $email,
-		'client' => array('email' => $email, 'first_name' => $client_0_first_name, 'last_name' => $client_0_last_name ),
-		'location1' => $location1,
+		'clients' => array('email_0' => $email_0, 'name_0' => $name_0, 'name_1' => $name_1, 'name_2' => $name_2),
+		'phone' => $phone,
+		'event_location_1' => $event_location_1,
+		'event_type' => $event_type,
 		'type' => $event_type_id,
-		'comment1' => $comment1,
+		'question_1' => $question_1,
+		'question_2' => $question_2,
+		'comment_1' => $comment_1,
 		'ip' => $userIp
 		);
 
 	$result = wp_remote_post( $url, array( 'sslverify' => false, 'body' => $data ) );
 
 	error_log(serialize($result));
-
+	$response = array(
+	   'what'=>'maurisco_cf_form',
+	   'action'=>'post inquiry',
+	   'id'=>'1',
+	   'data'=>'<p>OK</p>'
+	);
+	$xmlResponse = new WP_Ajax_Response($response);
+	$xmlResponse->send();
 	die();
 }
 

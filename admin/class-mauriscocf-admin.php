@@ -210,23 +210,28 @@ class Maurisco_Contact_Form_Plugin_Admin {
 
 		$maurisco_api_id = get_option( 'maurisco_api_id' );
 		$maurisco_api_key = get_option( 'maurisco_api_key' );
+		$maurisco_style_input_bg_color = get_option( 'maurisco_style_input_bg_color' );
 
 		$type_arr = maurisco_cf_get_leadtypes();
 
 		foreach ($type_arr as $type){
 			error_log('--------------------------');
-			error_log(($type->{'description'}));
 			error_log(($type->{'name'}));
+			error_log(($type->{'description'}));
 			error_log(($type->{'_id'}));
+			if(property_exists($type , 'fields'))
+				error_log(serialize($type->{'fields'}));
 		}
 
 
 		if( isset($_POST['maurisco_api_id']) && isset($_POST['maurisco_api_key']) ) {
 			$maurisco_api_id  = $_POST['maurisco_api_id' ];
 			$maurisco_api_key = $_POST['maurisco_api_key'];
+			$maurisco_style_input_bg_color = $_POST['maurisco_style_input_bg_color'];
 
 			update_option( 'maurisco_api_id',  $maurisco_api_id  );
 			update_option( 'maurisco_api_key', $maurisco_api_key );
+			update_option( 'maurisco_style_input_bg_color', $maurisco_style_input_bg_color );
 
 ?>
 <div class="updated"><p><strong><?php _e('settings saved.', 'menu-test' ); ?></strong></p></div>
@@ -234,6 +239,11 @@ class Maurisco_Contact_Form_Plugin_Admin {
 		}
 
 		echo 'Use the following short code on any page to include the contact form <pre>[maurisco_cf]</pre>';
+
+		foreach ($type_arr as $type){
+				echo 'If you have a specific page for ' . $type->{'name'} . ' lead types include an attribute in the short code like <pre>[maurisco_cf type='. strtolower($type->{'name'}). ']</pre>';
+		}
+
 		echo '<h2>Settings</h2>';
 		echo '<form name="maurisco_admin_form" method="post" action="">';
 		echo '<div class="wrap">';
@@ -242,6 +252,12 @@ class Maurisco_Contact_Form_Plugin_Admin {
 		echo "<div>Enter your Maurisco API KEY: <input id='maurisco_api_key' name='maurisco_api_key' size='40' \
 			type='text' placeholder='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' value='" . $maurisco_api_key . "'></div>";
 		echo '</div>';
+		echo "<hr>";
+		echo "<h2>Styling</h2>";
+		echo "<div>Input Textbox Background (RGB Hex):<input id='maurisco_style_input_bg_color' \
+		 name='maurisco_style_input_bg_color' size='40' \
+		 type='text' placeholder='FFFFFF' value='" . $maurisco_style_input_bg_color . "'></div>";
+		echo "<hr>";
 		echo "<input type='submit' name='Save' class='button-primary' value='Save' />";
 		echo '</form>';
 	}

@@ -86,6 +86,51 @@ class Maurisco_Contact_Form_Plugin {
 	}
 
 	/**
+	 * Return the markup for each field.
+	 *
+	 * @since    1.0.0
+	 *
+	 *@return    Plugin slug variable.
+	 */
+	private function field_parser( $field ) {
+		$req = $field->{'required'} ? " required " : " ";
+		$label = $field->{'description'}  ? $field->{'description'} : "";
+
+		$out  = "<div class='maurisco_cf_input_group row'>";
+		$out .= "<div class='twelve columns'>";
+		$out .= "<label class=''>" . $label . "</label>";
+		switch ( $field->{'name'} ) {
+			case 'name_0' :
+			case 'name_1' :
+			case 'name_2' :
+			case 'event_location_1' :
+			case 'question_1' :
+			case 'question_2' :
+			case 'phone' :
+				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_text' type='text'" . $req .  "autofocus placeholder='" . $field->{'placeholder'} . "'/>";
+				break;
+
+			case 'event_date' :
+				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_date' type='text'" . $req .  " placeholder='" . $field->{'placeholder'} . "' size='20'/>";
+				break;
+
+			case 'email_0' :
+			case 'email_1' :
+				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_email' type='email'" . $req .  "autofocus placeholder='" . $field->{'placeholder'} . "' />";
+				break;
+
+			case 'comment_1' :
+				$out .= "<textarea id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_text_area'" . $req .  "autofocus rows='10' cols='50' placeholder='" . $field->{'placeholder'} . "'></textarea>";
+				break;
+
+		}
+		$out .= "</div>";
+		$out .= "</div>";
+
+		return $out;
+	}
+
+	/**
 	 * Return the plugin slug.
 	 *
 	 * @since    1.0.0
@@ -270,7 +315,8 @@ class Maurisco_Contact_Form_Plugin {
 	 */
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_slug . '-jquery-ui', plugins_url( 'assets/css/jquery-ui.min.css', __FILE__ ), array(), self::VERSION );
-		wp_enqueue_style( $this->plugin_slug . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(''), self::VERSION );
+		wp_enqueue_style( $this->plugin_slug . '-public-css', plugins_url( 'assets/css/public.css', __FILE__ ), array(), self::VERSION );
+		wp_enqueue_style( $this->plugin_slug . '-normalize-css', plugins_url( 'assets/css/normalize.css', __FILE__ ), array(), self::VERSION );
 	}
 
 	/**
@@ -281,6 +327,7 @@ class Maurisco_Contact_Form_Plugin {
 	public function enqueue_scripts() {
 		error_log('enqueue_scripts');
 		wp_enqueue_script( 'maurisco-cf-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION, true );
+		wp_enqueue_script( 'jquery-ui' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 	}
@@ -334,31 +381,59 @@ class Maurisco_Contact_Form_Plugin {
 	public function maurisco_cf_sc( $atts ) {
 
 		$a = shortcode_atts( array(
-			'category' => ''
+			'type' => ''
 		), $atts );
 		$maurisco_api_id = get_option( 'maurisco_api_id');
 		$type_arr = maurisco_cf_get_leadtypes();
 
+		$match = 0;
+
+		if($atts['type'] && is_array($type_arr)){
+			foreach ($type_arr as $type ) {
+				if( !strcasecmp( $atts['type'], $type->{'name'} ) ){
+					$match = $type;
+					error_log('found match');
+				}
+			}
+		}
+
 		$output  = "<div><form id='maurisco_cf' class='maurisco_cf_form' name='maurisco_cf'>";
 		$output .= "<div><input id='maurisco_cf_nonce' type='hidden' value='" . wp_create_nonce( 'return_posts' ) . "' /></div>";
 		$output .= "<div><input id='maurisco_id' type='hidden' value='" . md5($maurisco_api_id) . "' /></div>";
-		$output .= "<div><input id='maurisco_cf_first_name' class='maurisco_cf_input maurisco_cf_text' type='text' required autofocus placeholder='First Name'/></div>";
-		$output .= "<div><input id='maurisco_cf_last_name' class='maurisco_cf_input maurisco_cf_text' type='text' required autofocus placeholder='Last Name'/></div>";
-		$output .= "<div><input id='maurisco_cf_email' class='maurisco_cf_input maurisco_cf_email' type='email' required placeholder='Email'/></div>";
-		$output .= "<div><input id='maurisco_cf_date' class='maurisco_cf_input maurisco_cf_date' type='text' required placeholder='Date' size='20'/></div>";
 		$output .= "<div><input id='maurisco_cf_url' type='hidden' value='" . admin_url( 'admin-ajax.php' ) . "' /></div>";
 
-		if(is_array($type_arr)){
-			$output .= "<div><select id='maurisco_cf_event_type' class='maurisco_cf_select' name='event_type'>";
-			foreach ($type_arr as $type){
-				$output .= "  <option value='" . $type->{'name'} . "'>" . ($type->{'name'}) ."</option>";
+		if($match){
+			$output .= "<div><input id='maurisco_cf_event_type' type='hidden' value='" . $match->{'name'} . "'/></div>";
+			if(is_array($type_arr)){
+				foreach ($match->{'fields'} as $field){
+					$field_markup = $this->field_parser( $field );
+					error_log($field_markup);
+					if( $field_markup )
+						$output .= $field_markup;
+				}
+			} else {
+				error_log('ERROR : not field types found');
 			}
-			$output .= "</select></div>";
+
+		} else {
+
+			$output .= "<div><input id='maurisco_cf_first_name' class='maurisco_cf_input u-full-width maurisco_cf_text' type='text' required autofocus placeholder='First Name'/></div>";
+			$output .= "<div><input id='maurisco_cf_last_name' class='maurisco_cf_input u-full-width maurisco_cf_text' type='text' required autofocus placeholder='Last Name'/></div>";
+			$output .= "<div><input id='maurisco_cf_email' class='maurisco_cf_input u-full-width maurisco_cf_email' type='email' required placeholder='Email'/></div>";
+			$output .= "<div><input id='maurisco_cf_date' class='maurisco_cf_input u-full-width maurisco_cf_date' type='text' required placeholder='Date' size='20'/></div>";
+
+			if(is_array($type_arr)){
+				$output .= "<div><select id='maurisco_cf_event_type' class='maurisco_cf_select' name='event_type'>";
+				foreach ($type_arr as $type){
+					$output .= "  <option value='" . $type->{'name'} . "'>" . ($type->{'name'}) ."</option>";
+				}
+				$output .= "</select></div>";
+			}
+			$output .= "<div><input id='maurisco_cf_location' class='maurisco_cf_input u-full-width maurisco_cf_text' type='text' required placeholder='Event Location'/></div>";
+			$output .= "<div><textarea id='maurisco_cf_comments1' class='maurisco_cf_input u-full-width maurisco_cf_text_area' required placeholder='Comments or questions?' rows='10' cols='50'></textarea></div>";
 		}
 
-		$output .= "<div><input id='maurisco_cf_location' class='maurisco_cf_input maurisco_cf_text' type='text' required placeholder='Event Location'/></div>";
-		$output .= "<div><textarea id='maurisco_cf_comments1' class='maurisco_cf_input maurisco_cf_text_area' required placeholder='Comments or questions?' rows='10' cols='50'></textarea></div>";
-		$output .= "<div><button id='maurisco_cf_submit' class='maurisco_cf_button' type='submit'>Submit</button></div>";
+		$output .= "<div><button id='maurisco_cf_submit' class='maurisco_cf_button'>Submit</button></div>";
 		$output .= "</form></div>";
 		$output .= "<div id='maurisco_cf_message' class='maurisco-cf-message'></div>";
 
@@ -373,14 +448,19 @@ class Maurisco_Contact_Form_Plugin {
 	 */
 	public function hook_css()
 	{
+		$maurisco_style_input_bg_color = get_option( 'maurisco_style_input_bg_color' );
+		if(!$maurisco_style_input_bg_color)
+			$maurisco_style_input_bg_color = '#f6f6f6';
+
 		$output = "<style>
 		.maurisco_cf_input {
 			display: block;
+			width: 100%;
 			padding: 6px 12px;
 			font-size: 14px;
 			line-height: 1.42857143;
 			color: #555555;
-			background-color: #f6f6f6;
+			background-color: ". $maurisco_style_input_bg_color .";
 			background-image: none;
 			border: 0px solid #676767;
 			border-radius: 0px;

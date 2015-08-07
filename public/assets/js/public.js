@@ -10,7 +10,7 @@ function maurisco_cf_validate(){
 
 	$(function () {
 		var userIp;
-		$('#maurisco_cf_date').datepicker({ dateFormat: 'yy-mm-dd' });
+		$('#maurisco_cf_event_date').datepicker({ dateFormat: 'yy-mm-dd' });
 		if(! $('#maurisco_id').val()) {
 			$('#maurisco_cf').hide();
 			$('#maurisco_cf_message').html('<div>Please login to WordPress and set your Maurisco API ID under Settings->Maurisco Contact Form Plugin before using the contact form on your site.</div>');
@@ -20,11 +20,12 @@ function maurisco_cf_validate(){
 			userIp = data.ip;
 		});
 
-
+		console.log('maurisco form initialized')
 
 		// Place your public-facing JavaScript here
-		$('#maurisco_cf').submit('click',function(event){
+		$('#maurisco_cf_submit').click(function(event){
 			event.preventDefault();
+			console.log('maurisco form submit');
 
 			if( maurisco_cf_validate() ) {
 				// post cf
@@ -38,30 +39,37 @@ function maurisco_cf_validate(){
 					$('#maurisco_cf_message').html('<div>Please login to WordPress and set your Maurisco API ID under settings before using the contact form on your site.</div>');
 				}
 
-				var first_name = $('#maurisco_cf_first_name').val();
-				var last_name = $('#maurisco_cf_last_name').val();
-				var email = $('#maurisco_cf_email').val();
-				var datePicked = $('#maurisco_cf_date').datepicker( "getDate" );
-				var location =  $('#maurisco_cf_location').val();
-				var type =  $('#maurisco_cf_event_type').val();
-				var maurisco_cf_comments1 = $('textarea#maurisco_cf_comments1').val();
+				var name_0 = $('#maurisco_cf_name_0').val();
+				var email_0 = $('#maurisco_cf_email_0').val();
+				var phone = $('#maurisco_cf_phone').val();
+				var name_1 = $('#maurisco_cf_name_1').val();
+				var name_2 = $('#maurisco_cf_name_2').val();
+
+				var event_date = $('#maurisco_cf_event_date').datepicker( "getDate" );
+				var event_location_1 =  $('#maurisco_cf_event_location_1').val();
+				var event_type =  $('#maurisco_cf_event_type').val();
+
+				var question_1 = $('#maurisco_cf_question_1').val();
+				var question_2 = $('#maurisco_cf_question_2').val();
+				var comment_1 = $('#maurisco_cf_comment_1').val();
+
 				var maurisco_cf_form_ajax_url = $('#maurisco_cf_url').val();
 				var maurisco_cf_nonce = $('#maurisco_cf_nonce').val();
 
-				console.log(datePicked);
-				console.log(type);
-
-
 				var data = {
-					action:  'maurisco_cf_plugin',
-					nonce: maurisco_cf_nonce,
-					client : [{ "first_name" : first_name,
-						 	    "last_name" : last_name}],
-					  "email" : email,
-				  "event_date": datePicked,
-				   "location1": location,
-					   "type" : type,
-				   "comment1" : maurisco_cf_comments1,
+					 "action" : 'maurisco_cf_plugin',
+					  "nonce" : maurisco_cf_nonce,
+					 "name_0" : name_0,
+ 					 "name_1" : name_1,
+					 "name_2" : name_2,
+				    "email_0" : email_0,
+					  "phone" : phone,
+				 "event_date" : event_date,
+		   "event_location_1" : event_location_1,
+				 "event_type" : event_type,
+				 "question_1" : question_1,
+				 "question_2" : question_2,
+				  "comment_1" : comment_1,
 					"userIp"  : userIp
 				   };
 
@@ -74,15 +82,11 @@ function maurisco_cf_validate(){
 					dataType : 'json',
 					error : function(data, status) {
 						// error handler
-						console.log('error');
 						console.log(data);
-						console.log(status);
 					},
 					success: function(data, status) {
 						// success handler
-						console.log('success');
 						console.log(data);
-						console.log(status);
 					}
 				});
 
