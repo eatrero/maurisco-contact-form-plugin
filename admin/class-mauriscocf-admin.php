@@ -211,6 +211,7 @@ class Maurisco_Contact_Form_Plugin_Admin {
 		$maurisco_api_id = get_option( 'maurisco_api_id' );
 		$maurisco_api_key = get_option( 'maurisco_api_key' );
 		$maurisco_style_input_bg_color = get_option( 'maurisco_style_input_bg_color' );
+		$maurisco_style_input_width_percentage = get_option( 'maurisco_style_input_width_percentage' );
 
 		$type_arr = maurisco_cf_get_leadtypes();
 
@@ -228,10 +229,12 @@ class Maurisco_Contact_Form_Plugin_Admin {
 			$maurisco_api_id  = $_POST['maurisco_api_id' ];
 			$maurisco_api_key = $_POST['maurisco_api_key'];
 			$maurisco_style_input_bg_color = $_POST['maurisco_style_input_bg_color'];
+			$maurisco_style_input_width_percentage = $_POST['maurisco_style_input_width_percentage'];
 
 			update_option( 'maurisco_api_id',  $maurisco_api_id  );
 			update_option( 'maurisco_api_key', $maurisco_api_key );
 			update_option( 'maurisco_style_input_bg_color', $maurisco_style_input_bg_color );
+			update_option( 'maurisco_style_input_width_percentage', $maurisco_style_input_width_percentage );
 
 ?>
 <div class="updated"><p><strong><?php _e('settings saved.', 'menu-test' ); ?></strong></p></div>
@@ -257,6 +260,9 @@ class Maurisco_Contact_Form_Plugin_Admin {
 		echo "<div>Input Textbox Background (RGB Hex):<input id='maurisco_style_input_bg_color' \
 		 name='maurisco_style_input_bg_color' size='40' \
 		 type='text' placeholder='FFFFFF' value='" . $maurisco_style_input_bg_color . "'></div>";
+		echo "<div>Input Textbox Width (%):<input id='maurisco_style_input_width_percentage' \
+		 name='maurisco_style_input_width_percentage' size='40' \
+		 type='text' placeholder='100' value='" . $maurisco_style_input_width_percentage . "'></div>";
 		echo "<hr>";
 		echo "<input type='submit' name='Save' class='button-primary' value='Save' />";
 		echo '</form>';

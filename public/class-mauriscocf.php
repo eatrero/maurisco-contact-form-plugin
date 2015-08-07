@@ -451,11 +451,17 @@ class Maurisco_Contact_Form_Plugin {
 		$maurisco_style_input_bg_color = get_option( 'maurisco_style_input_bg_color' );
 		if(!$maurisco_style_input_bg_color)
 			$maurisco_style_input_bg_color = '#f6f6f6';
+		else
+			$maurisco_style_input_bg_color = '#'. $maurisco_style_input_bg_color;
+
+		$maurisco_style_input_width_percentage = get_option( 'maurisco_style_input_width_percentage' );
+		if(!$maurisco_style_input_width_percentage)
+			$maurisco_style_input_width_percentage = '100';
 
 		$output = "<style>
 		.maurisco_cf_input {
 			display: block;
-			width: 100%;
+			width: ". $maurisco_style_input_width_percentage ."%;
 			padding: 6px 12px;
 			font-size: 14px;
 			line-height: 1.42857143;
