@@ -90,9 +90,9 @@ function maurisco_cf_plugin_callback() {
 	$event_type_id = maurisco_filter_lead_type($type_arr, $event_type);
 
 	if( defined(MARUISCO_CF_DEBUG) ){
-		$url = 'https://192.168.1.157:8000/api/v1/lead_types';
+		$url = 'https://192.168.1.157:8000/api/v1/lead';
 	} else {
-		$url = 'https://mauris.co/api/v1/lead_types';
+		$url = 'https://mauris.co/api/v1/lead';
 	}
 
 	$data = array(
