@@ -1,12 +1,17 @@
-function maurisco_cf_validate(){
-//	$('')
 
-	return true;
-}
 
 
 (function ( $ ) {
 	"use strict";
+	function maurisco_cf_validate(){
+//	$('')
+
+		// TODO: need to roll my own validation code here.
+
+		console.log('valid form = ',$('#maurisco_cf').valid() );
+
+		return $('#maurisco_cf').valid();
+	}
 
 	$(function () {
 		var userIp;
@@ -20,7 +25,9 @@ function maurisco_cf_validate(){
 			userIp = data.ip;
 		});
 
-		console.log('maurisco form initialized')
+		console.log('maurisco form initialized');
+
+		$('#maurisco_cf').validate();
 
 		// Place your public-facing JavaScript here
 		$('#maurisco_cf_submit').click(function(event){

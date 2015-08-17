@@ -244,7 +244,7 @@ class Maurisco_Contact_Form_Plugin_Admin {
 		echo 'Use the following short code on any page to include the contact form <pre>[maurisco_cf]</pre>';
 
 		foreach ($type_arr as $type){
-				echo 'If you have a specific page for ' . $type->{'name'} . ' lead types include an attribute in the short code like <pre>[maurisco_cf type='. strtolower($type->{'name'}). ']</pre>';
+				echo 'If you have a specific contact page for ' . $type->{'name'} . " lead types include an attribute in the short code like <pre>[maurisco_cf type='" . strtolower($type->{'name'}). "']</pre>";
 		}
 
 		echo '<h2>Settings</h2>';

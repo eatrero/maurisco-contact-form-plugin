@@ -107,20 +107,20 @@ class Maurisco_Contact_Form_Plugin {
 			case 'question_1' :
 			case 'question_2' :
 			case 'phone' :
-				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_text' type='text'" . $req .  "autofocus placeholder='" . $field->{'placeholder'} . "'/>";
+				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' name='" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_text' type='text'" . $req .  "autofocus placeholder='" . $field->{'placeholder'} . "'/>";
 				break;
 
 			case 'event_date' :
-				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_date' type='text'" . $req .  " placeholder='" . $field->{'placeholder'} . "' size='20'/>";
+				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' name='" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_date' type='text'" . $req .  " placeholder='" . $field->{'placeholder'} . "' size='20'/>";
 				break;
 
 			case 'email_0' :
 			case 'email_1' :
-				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_email' type='email'" . $req .  "autofocus placeholder='" . $field->{'placeholder'} . "' />";
+				$out .= "<input id='maurisco_cf_" . $field->{'name'} . "' name='" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_email' type='email'" . $req .  "autofocus placeholder='" . $field->{'placeholder'} . "' />";
 				break;
 
 			case 'comment_1' :
-				$out .= "<textarea id='maurisco_cf_" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_text_area'" . $req .  "autofocus rows='10' cols='50' placeholder='" . $field->{'placeholder'} . "'></textarea>";
+				$out .= "<textarea id='maurisco_cf_" . $field->{'name'} . "' name='" . $field->{'name'} . "' class='maurisco_cf_input u-full-width maurisco_cf_text_area'" . $req .  "autofocus rows='10' cols='50' placeholder='" . $field->{'placeholder'} . "'></textarea>";
 				break;
 
 		}
@@ -326,7 +326,9 @@ class Maurisco_Contact_Form_Plugin {
 	 */
 	public function enqueue_scripts() {
 		error_log('enqueue_scripts');
+		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'maurisco-cf-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), self::VERSION, true );
+		wp_enqueue_script( 'jquery-validator', '//ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js', array( 'jquery' ), self::VERSION, true);
 		wp_enqueue_script( 'jquery-ui' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
@@ -390,6 +392,7 @@ class Maurisco_Contact_Form_Plugin {
 
 		if($atts['type'] && is_array($type_arr)){
 			foreach ($type_arr as $type ) {
+				error_log('looking at ' . $atts['type'] . ' '. $type->{'name'});
 				if( !strcasecmp( $atts['type'], $type->{'name'} ) ){
 					$match = $type;
 					error_log('found match');
@@ -398,6 +401,7 @@ class Maurisco_Contact_Form_Plugin {
 		}
 
 		$output  = "<div><form id='maurisco_cf' class='maurisco_cf_form' name='maurisco_cf'>";
+		$output .= "<fieldset>";
 		$output .= "<div><input id='maurisco_cf_nonce' type='hidden' value='" . wp_create_nonce( 'return_posts' ) . "' /></div>";
 		$output .= "<div><input id='maurisco_id' type='hidden' value='" . md5($maurisco_api_id) . "' /></div>";
 		$output .= "<div><input id='maurisco_cf_url' type='hidden' value='" . admin_url( 'admin-ajax.php' ) . "' /></div>";
@@ -433,7 +437,8 @@ class Maurisco_Contact_Form_Plugin {
 			$output .= "<div><textarea id='maurisco_cf_comments1' class='maurisco_cf_input u-full-width maurisco_cf_text_area' required placeholder='Comments or questions?' rows='10' cols='50'></textarea></div>";
 		}
 
-		$output .= "<div><button id='maurisco_cf_submit' class='maurisco_cf_button'>Submit</button></div>";
+		$output .= "<div><button id='maurisco_cf_submit' type='submit' class='maurisco_cf_button'>Submit</button></div>";
+		$output .= "</fieldset>";
 		$output .= "</form></div>";
 		$output .= "<div id='maurisco_cf_message' class='maurisco-cf-message'></div>";
 
