@@ -401,7 +401,6 @@ class Maurisco_Contact_Form_Plugin {
 		}
 
 		$output  = "<div><form id='maurisco_cf' class='maurisco_cf_form' name='maurisco_cf'>";
-		$output .= "<fieldset>";
 		$output .= "<div><input id='maurisco_cf_nonce' type='hidden' value='" . wp_create_nonce( 'return_posts' ) . "' /></div>";
 		$output .= "<div><input id='maurisco_id' type='hidden' value='" . md5($maurisco_api_id) . "' /></div>";
 		$output .= "<div><input id='maurisco_cf_url' type='hidden' value='" . admin_url( 'admin-ajax.php' ) . "' /></div>";
@@ -438,7 +437,6 @@ class Maurisco_Contact_Form_Plugin {
 		}
 
 		$output .= "<div><button id='maurisco_cf_submit' type='submit' class='maurisco_cf_button'>Submit</button></div>";
-		$output .= "</fieldset>";
 		$output .= "</form></div>";
 		$output .= "<div id='maurisco_cf_message' class='maurisco-cf-message'></div>";
 
@@ -478,6 +476,10 @@ class Maurisco_Contact_Form_Plugin {
 			margin-top: 10px;
 			margin-bottom:10px;
 		}
+		.maurisco_cf_input_group {
+			margin-top: 5px;
+			margin-bottom:40px;
+		}
 
 		.maurisco_cf_textarea {
 			height: 30px;
@@ -488,6 +490,11 @@ class Maurisco_Contact_Form_Plugin {
 		}
 		.maurisco_cf_button {
 			background-color: rgb(192,192,192);
+		}
+		label.error {
+			color: red;
+			font-weight: bold;
+			padding-bottom: 10px;
 		}
 		</style>";
 
