@@ -1,5 +1,5 @@
 === Maurisco Contact Form ===
-Contributors: Ed Atrero
+Contributors: Maurisco
 Donate link: http://maurisco.com/
 Tags: maurisco, contact form, wedding photography, wedding, photographers, crm, studio manager, studio crm
 Requires at least: 3.5.1

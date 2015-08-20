@@ -1,11 +1,11 @@
 {
   "name": "maursico_cf",
   "version": "0.0.1",
-  "author": "Ed Atrero <info@mauris.co>",
+  "author": "Maurisco <info@mauris.co>",
   "homepage": "http://mauris.co",
   "repository": {
     "type": "git",
-    "url": "git://github.com/"
+    "url": "https://github.com/eatrero/maurisco-contact-form-plugin.git"
   },
   "licenses": [
     {

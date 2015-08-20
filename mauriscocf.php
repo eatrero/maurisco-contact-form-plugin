@@ -5,17 +5,17 @@
  * A contact form plugin for Maurisco App users
  *
  * @package   Maurisco_Contact_Form_Plugin
- * @author    Ed Atrero <info@mauris.co>
+ * @author    Ed @ Maurisco <info@mauris.co>
  * @license   GPL-2.0+
  * @link      http://wordpress.org/plugins
- * @copyright 2013 Ed Atrero
+ * @copyright 2015 Maurisco
  *
  * @wordpress-plugin
  * Plugin Name:       Maurisco Contact Form Plugin
  * Plugin URI:        http://wordpress.org/plugins
  * Description:       A contact form plugin for Maurisco App users
  * Version:           0.0.1
- * Author:            Ed Atrero
+ * Author:            Maurisco
  * Author URI:        http://mauris.co
  * Text Domain:       mauriscocf
  * License:           GPL-2.0+
